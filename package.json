@@ -1,0 +1,37 @@
+{
+  "name": "declarray",
+  "version": "0.0.1",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "mocha -r ts-node/register \"tests/**/*.spec.ts\"",
+    "build": "tsc --p tsconfig.json",
+    "pack": "npm run build && npm pack",
+    "bench": "ts-mocha \"./bench/tests/**/*.bench-spec.ts\"",
+    "bench:opt": "ts-mocha -p tsconfig.spec.json \"bench/tests/sequence/grouping-collection.bench-spec.ts\""
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/afferenslucem/declarray.git"
+  },
+  "author": "afferenslucem",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/afferenslucem/declarray/issues"
+  },
+  "homepage": "https://github.com/afferenslucem/declarray#readme",
+  "devDependencies": {
+    "@types/benchmark": "^1.0.33",
+    "@types/chai": "^4.2.12",
+    "@types/mocha": "^8.0.1",
+    "@types/node": "^14.0.27",
+    "@types/sinon": "^9.0.4",
+    "benchmark": "^2.1.4",
+    "chai": "^4.2.0",
+    "mocha": "^8.1.1",
+    "mocha-sinon": "^2.1.2",
+    "sinon": "^9.0.3",
+    "ts-node": "^8.10.2",
+    "typescript": "^3.9.7"
+  }
+}
