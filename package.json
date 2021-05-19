@@ -1,19 +1,35 @@
 {
   "name": "declarray",
-  "version": "0.0.1",
-  "description": "",
-  "main": "index.js",
+  "version": "0.1.0-rc6",
+  "description": "Tools for working with arrays in LINQ style",
+  "typings": "dist/index",
+  "main": "dist/index.js",
   "scripts": {
-    "test": "mocha -r ts-node/register \"tests/**/*.spec.ts\"",
+    "test": "mocha -r ts-node/register \"tests/src/**/*.spec.ts\"",
+    "test:prod": "npm run build && mocha -r ts-node/register \"tests/lib/**/*.spec.ts\"",
     "build": "tsc --p tsconfig.json",
     "pack": "npm run build && npm pack",
-    "bench": "ts-mocha \"./bench/tests/**/*.bench-spec.ts\"",
-    "bench:opt": "ts-mocha -p tsconfig.spec.json \"bench/tests/sequence/grouping-collection.bench-spec.ts\""
+    "bench:run": "mocha -r ts-node/register \"./benches/tests/**/*.bench-spec.ts\"",
+    "bench:prod": "npm run build && npm run bench:run",
+    "lint": "eslint . --fix"
   },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/afferenslucem/declarray.git"
   },
+  "keywords": [
+    "collections",
+    "where",
+    "select",
+    "LINQ",
+    "sort",
+    "group",
+    "zip",
+    "union",
+    "except",
+    "join",
+    "arrays"
+  ],
   "author": "afferenslucem",
   "license": "ISC",
   "bugs": {
@@ -26,10 +42,16 @@
     "@types/mocha": "^8.0.1",
     "@types/node": "^14.0.27",
     "@types/sinon": "^9.0.4",
+    "@typescript-eslint/eslint-plugin": "^4.23.0",
+    "@typescript-eslint/parser": "^4.23.0",
     "benchmark": "^2.1.4",
     "chai": "^4.2.0",
+    "eslint": "^7.26.0",
+    "eslint-config-prettier": "^8.3.0",
+    "eslint-plugin-prettier": "^3.4.0",
     "mocha": "^8.1.1",
     "mocha-sinon": "^2.1.2",
+    "prettier": "^2.3.0",
     "sinon": "^9.0.3",
     "ts-node": "^8.10.2",
     "typescript": "^3.9.7"

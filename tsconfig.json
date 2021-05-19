@@ -10,7 +10,7 @@
     "declaration": true,
     "skipLibCheck": true,
     "forceConsistentCasingInFileNames": true,
-    "outDir": "lib",
+    "outDir": "dist",
     "noImplicitAny": false,
     "strictNullChecks": false
   },
@@ -19,8 +19,8 @@
   ],
   "exclude": [
     "node_modules",
-    "lib",
-    "src/**/*.spec.ts",
-    "src/**/*.bench-spec.ts"
+    "dist",
+    "benches/",
+    "tests/"
   ]
 }

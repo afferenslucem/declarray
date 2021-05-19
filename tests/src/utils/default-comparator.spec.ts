@@ -1,12 +1,12 @@
-import {DefaultComparator} from "../../src/utils/default-comparator";
-import {expect} from "chai";
+import { DefaultComparator } from '../../../src/utils/default-comparator';
+import { expect } from 'chai';
 
 describe('DefaultComparator', () => {
     let comparator: DefaultComparator = null;
 
     beforeEach(() => {
         comparator = new DefaultComparator();
-    })
+    });
 
     describe('compare', () => {
         describe('numbers', () => {
@@ -36,7 +36,7 @@ describe('DefaultComparator', () => {
 
         describe('strings', () => {
             it('should return -1', () => {
-                const result = comparator.compare("aa", "ab");
+                const result = comparator.compare('aa', 'ab');
 
                 const expected = -1;
 
@@ -44,14 +44,14 @@ describe('DefaultComparator', () => {
             });
 
             it('should return 0', () => {
-                const result = comparator.compare("a", "a");
+                const result = comparator.compare('a', 'a');
 
                 const expected = 0;
 
                 expect(result).equal(expected);
             });
             it('should return 1', () => {
-                const result = comparator.compare("ba", "aa");
+                const result = comparator.compare('ba', 'aa');
 
                 const expected = 1;
 

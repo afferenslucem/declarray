@@ -1,0 +1,126 @@
+{
+  "root": true,
+  "parser": "@typescript-eslint/parser",
+  "plugins": [
+    "@typescript-eslint"
+  ],
+  "extends": [
+    "eslint:recommended",
+    "plugin:@typescript-eslint/eslint-recommended",
+    "plugin:@typescript-eslint/recommended",
+    "plugin:prettier/recommended",
+    "prettier/prettier"
+  ],
+  "overrides": [
+    {
+      "files": [
+        "*.ts",
+        "*.spec.ts",
+        "*.bench-spec.ts"
+      ],
+      "parserOptions": {
+        "project": [
+          "tsconfig.json"
+        ],
+        "createDefaultProgram": true
+      },
+      "extends": [
+        "eslint:recommended",
+        "plugin:@typescript-eslint/recommended",
+        "plugin:@typescript-eslint/recommended-requiring-type-checking",
+        "plugin:prettier/recommended",
+        "prettier/prettier"
+      ],
+      "rules": {
+        "keyword-spacing": [
+          "error",
+          {
+            "before": true,
+            "after": true
+          }
+        ],
+        "linebreak-style": "off",
+        "no-underscore-dangle": "off",
+        "eqeqeq": [
+          "error",
+          "always",
+          {
+            "null": "ignore"
+          }
+        ],
+        "array-bracket-newline": [
+          "error",
+          "consistent"
+        ],
+        "comma-dangle": [
+          "error",
+          "always-multiline"
+        ],
+        "comma-spacing": [
+          "error",
+          {
+            "before": false,
+            "after": true
+          }
+        ],
+        "comma-style": [
+          "error",
+          "last"
+        ],
+        "computed-property-spacing": [
+          "error",
+          "never"
+        ],
+        "function-call-argument-newline": [
+          "error",
+          "consistent"
+        ],
+        "key-spacing": [
+          "error",
+          {
+            "beforeColon": false,
+            "afterColon": true,
+            "mode": "strict"
+          }
+        ],
+        "no-lonely-if": "error",
+        "no-multiple-empty-lines": "error",
+        "no-trailing-spaces": "error",
+        "no-unneeded-ternary": "error",
+        "object-curly-spacing": [
+          "error",
+          "always"
+        ],
+        "no-whitespace-before-property": "error",
+        "arrow-body-style": [
+          "error",
+          "as-needed"
+        ],
+        "arrow-spacing": "error",
+        "no-confusing-arrow": "error",
+        /**
+         * Any TypeScript source code (NOT TEMPLATE) related rules you wish to use/reconfigure over and above the
+         * recommended set provided by the @angular-eslint project would go here.
+         */
+        "@typescript-eslint/member-ordering": "off",
+        "@typescript-eslint/restrict-plus-operands": "off",
+        "@typescript-eslint/no-explicit-any": "off",
+        "@typescript-eslint/restrict-template-expressions": "off",
+        "@typescript-eslint/no-unsafe-return": "off",
+        "@typescript-eslint/no-unsafe-assignment": "off",
+        "@typescript-eslint/explicit-module-boundary-types": [
+          "error",
+          {
+            "allowArgumentsExplicitlyTypedAsAny": true
+          }
+        ],
+        "@typescript-eslint/ban-ts-comment": "off",
+        "@typescript-eslint/no-empty-function": "off",
+        "@typescript-eslint/no-unsafe-member-access": "off",
+        "@typescript-eslint/no-unsafe-call": "off",
+        "@typescript-eslint/unbound-method": "off",
+        "@typescript-eslint/no-floating-promises": "off"
+      }
+    }
+  ]
+}

@@ -1,43 +1,42 @@
-import {IComparator} from "../interfaces/i-comparator";
-import {DefaultComparator} from "../utils/default-comparator";
-import {HashStorage} from "./hash-storage";
-import {Entry} from "../models/entry";
+import { IEqualityComparator } from '../interfaces/i-equality-comparator';
+import { DefaultComparator } from '../utils/default-comparator';
+import { HashStorage } from './hash-map/hash-storage';
 
-const MIN_HASH_LENGTH = 100;
 const REHASH_INDEX = 10;
-const REHASH_TRYOUTS = 3;
-
-
+const CRITICAL_BUNCH_LENGTH = 10;
+const REHASH_DOWN_THRESHOLD = 0.85;
+const MIN_HASH_LENGTH = 100;
 
 export class Dictionary<TKey, TValue> {
-    private comparator: IComparator<TKey> = null;
+    private comparator: IEqualityComparator<TKey> = null;
     private hashStorage: HashStorage<TKey, TValue> = null;
 
-    public constructor(comparator?: IComparator<TKey>) {
-        this.comparator = comparator || new DefaultComparator() as any;
-
-        this.hashStorage = new HashStorage<TKey, TValue>(this.comparator)
+    public get entries(): Array<[TKey, TValue]> {
+        return this.hashStorage.entries().map(item => [item.key, item.value]);
     }
 
-    public set(key: TKey, value: TValue) {
-        this.insert({key, value});
-
-        if (this.hashStorage.filled >= 0.5) {
-            this.rehashUp();
-        }
+    public get keys(): TKey[] {
+        return this.hashStorage.entries().map(item => item.key);
     }
 
-    private insert(entry: Entry<TKey, TValue>, trying = 0): void {
-        if (trying === REHASH_TRYOUTS) {
-            throw new Error(`Could not insert value { key: ${entry.key}, value: ${entry.value} }`);
-        }
+    public get values(): TValue[] {
+        return this.hashStorage.entries().map(item => item.value);
+    }
 
-        const result = this.hashStorage.set(entry);
+    public get length(): number {
+        return this.hashStorage.count;
+    }
 
-        if(!result) {
+    public constructor(comparator?: IEqualityComparator<TKey>) {
+        this.comparator = comparator || (new DefaultComparator() as any);
+        this.clear();
+    }
+
+    public set(key: TKey, value: TValue): void {
+        this.hashStorage.set({ key, value });
+
+        if (this.hashStorage.longestBunch >= CRITICAL_BUNCH_LENGTH) {
             this.rehashUp();
-
-            this.insert(entry, trying + 1);
         }
     }
 
@@ -46,28 +45,38 @@ export class Dictionary<TKey, TValue> {
     }
 
     public remove(key: TKey): void {
-        return this.hashStorage.remove(key);
+        this.hashStorage.remove(key);
 
-        if (this.hashStorage.filled <= 0.1 && this.hashStorage.length > MIN_HASH_LENGTH) {
+        if (this.hashStorage.zeroBunches >= REHASH_DOWN_THRESHOLD && this.hashStorage.hashSize > MIN_HASH_LENGTH) {
             this.rehashDown();
         }
+    }
+
+    public containsKey(key: TKey): boolean {
+        return this.get(key) != null;
+    }
+
+    public clear(): void {
+        this.hashStorage = new HashStorage<TKey, TValue>(this.comparator, MIN_HASH_LENGTH);
+    }
+
+    private rehashUp(): void {
+        this.rehash(this.hashStorage.hashSize * REHASH_INDEX);
+    }
+
+    private rehashDown(): void {
+        this.rehash(this.hashStorage.hashSize / REHASH_INDEX);
     }
 
     private rehash(length: number) {
         const storage = new HashStorage<TKey, TValue>(this.comparator, length);
 
-        this.hashStorage.array.filter(Boolean).forEach(item => {
-            storage.set(item);
-        })
+        const items = this.hashStorage.entries();
+
+        for (let i = 0; i < items.length; i++) {
+            storage.set(items[i]);
+        }
 
         this.hashStorage = storage;
-    }
-
-    private rehashUp(): void {
-        this.rehash(this.hashStorage.length * REHASH_INDEX);
-    }
-
-    private rehashDown(): void {
-        this.rehash(this.hashStorage.length / REHASH_INDEX);
     }
 }
