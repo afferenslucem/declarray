@@ -14,6 +14,30 @@ export class PromisifySequence<T> implements IPromiseMaterializeSequence<T> {
     }
 
     public toArray(): Promise<T[]> {
+        return Promise.resolve().then(() => this.toArrayMicrotask());
+    }
+
+    public toLookup<TKey, TValue>(
+        arg1: SelectExpression<T, TKey>,
+        arg2?: IEqualityComparator<TKey> | SelectExpression<T, TValue>,
+        arg3?: SelectExpression<T, TValue>,
+    ): Promise<ILookup<TKey, TValue>> {
+        return Promise.resolve().then(() => this.toLookupMicrotask(arg1, arg2, arg3));
+    }
+
+    public toHashSet(comparator?: IEqualityComparator<T>): Promise<HashSet<T>> {
+        return Promise.resolve().then(() => this.toHashSetMicrotask(comparator));
+    }
+
+    public toDictionary<TKey, TValue>(
+        arg1: SelectExpression<T, TKey>,
+        arg2?: IEqualityComparator<TKey> | SelectExpression<T, TValue>,
+        arg3?: SelectExpression<T, TValue>,
+    ): Promise<Dictionary<TKey, TValue>> {
+        return Promise.resolve().then(() => this.toDictionaryMicrotask(arg1, arg2, arg3));
+    }
+
+    private toArrayMicrotask(): Promise<T[]> {
         return new Promise<T[]>((resolve, reject) => {
             try {
                 const result = this.inner.toArray();
@@ -24,7 +48,7 @@ export class PromisifySequence<T> implements IPromiseMaterializeSequence<T> {
         });
     }
 
-    public toLookup<TKey, TValue>(
+    private toLookupMicrotask<TKey, TValue>(
         arg1: SelectExpression<T, TKey>,
         arg2?: IEqualityComparator<TKey> | SelectExpression<T, TValue>,
         arg3?: SelectExpression<T, TValue>,
@@ -40,7 +64,7 @@ export class PromisifySequence<T> implements IPromiseMaterializeSequence<T> {
         });
     }
 
-    public toHashSet(comparator?: IEqualityComparator<T>): Promise<HashSet<T>> {
+    private toHashSetMicrotask(comparator?: IEqualityComparator<T>): Promise<HashSet<T>> {
         return new Promise<HashSet<T>>((resolve, reject) => {
             try {
                 const result = this.inner.toHashSet(comparator);
@@ -51,7 +75,7 @@ export class PromisifySequence<T> implements IPromiseMaterializeSequence<T> {
         });
     }
 
-    public toDictionary<TKey, TValue>(
+    private toDictionaryMicrotask<TKey, TValue>(
         arg1: SelectExpression<T, TKey>,
         arg2?: IEqualityComparator<TKey> | SelectExpression<T, TValue>,
         arg3?: SelectExpression<T, TValue>,
