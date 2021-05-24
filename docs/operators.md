@@ -3,7 +3,7 @@
 * [empty](#empty)
 * [of](#of)
 * [range](#range)
-* [repeat](#rarepeatnge)
+* [repeat](#repeat)
 
 ## empty
 
