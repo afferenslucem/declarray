@@ -7,20 +7,20 @@ import { IEqualityComparator } from './i-equality-comparator';
 import { IPromiseMaterializeSequence } from './i-promise-materialize-sequence';
 
 export interface ISequence<T> extends IMaterializeSequence<T>, IIterable<T> {
-    select<TOuter>(condition: SelectExpression<T, TOuter>): ISequence<TOuter>;
+    select<TOuter>(expression: SelectExpression<T, TOuter>): ISequence<TOuter>;
 
-    selectMany<TOuter>(selectManyCondition: SelectExpression<T, TOuter[]>): ISequence<TOuter>;
+    selectMany<TOuter>(selectManyExpression: SelectExpression<T, TOuter[]>): ISequence<TOuter>;
 
     where(condition: WhereCondition<T>): ISequence<T>;
 
-    orderBy<TProperty>(condition: SelectExpression<T, TProperty>): IThenBySequence<T>;
+    orderBy<TProperty>(expression: SelectExpression<T, TProperty>): IThenBySequence<T>;
 
-    orderBy<TProperty>(condition: SelectExpression<T, TProperty>, comparator?: IEqualityComparator<TProperty>): IThenBySequence<T>;
+    orderBy<TProperty>(expression: SelectExpression<T, TProperty>, comparator?: IEqualityComparator<TProperty>): IThenBySequence<T>;
 
-    orderByDescending<TProperty>(condition: SelectExpression<T, TProperty>): IThenBySequence<T>;
+    orderByDescending<TProperty>(expression: SelectExpression<T, TProperty>): IThenBySequence<T>;
 
     orderByDescending<TProperty>(
-        condition: SelectExpression<T, TProperty>,
+        expression: SelectExpression<T, TProperty>,
         comparator?: IEqualityComparator<TProperty>,
     ): IThenBySequence<T>;
 
@@ -66,11 +66,11 @@ export interface ISequence<T> extends IMaterializeSequence<T>, IIterable<T> {
 
     except(additional: ISequence<T> | T[]): ISequence<T>;
 
-    except(additional: ISequence<T> | T[], comparator?: IEqualityComparator<T>): ISequence<T>;
+    except(additional: ISequence<T> | T[], comparator: IEqualityComparator<T>): ISequence<T>;
 
     intersect(additional: ISequence<T> | T[]): ISequence<T>;
 
-    intersect(additional: ISequence<T> | T[], comparator?: IEqualityComparator<T>): ISequence<T>;
+    intersect(additional: ISequence<T> | T[], comparator: IEqualityComparator<T>): ISequence<T>;
 
     groupJoin<TOuter, TKey, TResult>(
         outer: ISequence<TOuter> | TOuter[],
@@ -113,11 +113,11 @@ export interface ISequence<T> extends IMaterializeSequence<T>, IIterable<T> {
         zipFunction: ZipExpression<T, TOuter, TResult>,
     ): ISequence<TResult>;
 
-    aggregate(reduceCondition: ReduceExpression<T>): T;
+    aggregate(aggregateExpression: ReduceExpression<T>): T;
 
-    aggregate(reduceCondition: ReduceExpression<T>, initial: T): T;
+    aggregate(aggregateExpression: ReduceExpression<T>, initial: T): T;
 
-    aggregate<TOuter>(reduceCondition: AccumulateExpression<T, TOuter>, initial: TOuter): TOuter;
+    aggregate<TOuter>(aggregateExpression: AccumulateExpression<T, TOuter>, initial: TOuter): TOuter;
 
     all(condition: WhereCondition<T>): boolean;
 

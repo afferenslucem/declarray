@@ -27,3 +27,4 @@ bench-out-formatter.d.ts
 .prettierignore
 .eslintrc.json
 .eslintignore
+docs/
