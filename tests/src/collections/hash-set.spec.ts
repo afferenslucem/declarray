@@ -17,6 +17,7 @@ describe('HashSet', () => {
                 set.add('entity1');
 
                 expect(set.contains('entity1')).equal(true);
+                expect(set.contains('entity1')).equal(true);
             });
 
             it('add/remove/contains', () => {

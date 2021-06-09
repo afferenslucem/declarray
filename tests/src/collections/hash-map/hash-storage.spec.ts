@@ -17,6 +17,7 @@ describe('HashStorage', () => {
             expect(storage.count).equal(1);
             expect(storage.entries().length).equal(1);
             expect(storage.get('124')).equal(124);
+            expect(storage.zeroBunches).equal(99);
         });
 
         it('should update', () => {
@@ -26,6 +27,7 @@ describe('HashStorage', () => {
             expect(storage.count).equal(1);
             expect(storage.entries().length).equal(1);
             expect(storage.get('124')).equal(421);
+            expect(storage.zeroBunches).equal(99);
         });
     });
 
@@ -71,6 +73,7 @@ describe('HashStorage', () => {
         it('should remove existing', () => {
             storage.set(new Entry<string, number>('key', 777));
             expect(storage.count).equal(1);
+            expect(storage.zeroBunches).equal(9);
 
             let result = storage.get('key');
             expect(result).equal(777);
@@ -80,6 +83,7 @@ describe('HashStorage', () => {
 
             result = storage.get('key');
             expect(result).equal(undefined);
+            expect(storage.zeroBunches).equal(10);
         });
     });
 });

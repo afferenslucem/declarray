@@ -1,6 +1,7 @@
 import { IEqualityComparator } from '../../interfaces/i-equality-comparator';
 import { ISequence } from '../../interfaces/i-sequence';
 import { Sequence } from '../sequence';
+import { Materializer } from '../materializer';
 
 export class IntersectSequence<T> extends Sequence<T> {
     private outer: ISequence<T>;
@@ -16,10 +17,12 @@ export class IntersectSequence<T> extends Sequence<T> {
         const first = this.innerCollection.toArray();
         const second = this.outer.toArray();
 
+        const temp = Materializer.createCompareDictionary(second, this.comparator, second.length);
+
         const result = [];
 
         for (let i = 0, len = first.length; i < len; i++) {
-            if (second.find(item => this.comparator.equals(first[i], item))) {
+            if (temp.containsKey(first[i])) {
                 result.push(first[i]);
             }
         }

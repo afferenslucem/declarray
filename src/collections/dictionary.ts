@@ -6,6 +6,7 @@ const REHASH_INDEX = 10;
 const CRITICAL_BUNCH_LENGTH = 10;
 const REHASH_DOWN_THRESHOLD = 0.85;
 const MIN_HASH_LENGTH = 100;
+const MAX_HASH_LENGTH = 10000;
 
 export class Dictionary<TKey, TValue> {
     private comparator: IEqualityComparator<TKey> = null;
@@ -27,9 +28,18 @@ export class Dictionary<TKey, TValue> {
         return this.hashStorage.count;
     }
 
-    public constructor(comparator?: IEqualityComparator<TKey>) {
+    public constructor(comparator?: IEqualityComparator<TKey>, initialLength?: number) {
         this.comparator = comparator || (new DefaultComparator() as any);
-        this.clear();
+
+        const length = Dictionary.chooseLength(initialLength);
+
+        this.innerClear(length);
+    }
+
+    private static chooseLength(initialLength?: number): number {
+        if (!initialLength) return MIN_HASH_LENGTH;
+
+        return initialLength > MAX_HASH_LENGTH ? MAX_HASH_LENGTH : initialLength;
     }
 
     public set(key: TKey, value: TValue): void {
@@ -56,8 +66,12 @@ export class Dictionary<TKey, TValue> {
         return this.get(key) != null;
     }
 
+    private innerClear(initialLength: number): void {
+        this.hashStorage = new HashStorage<TKey, TValue>(this.comparator, initialLength);
+    }
+
     public clear(): void {
-        this.hashStorage = new HashStorage<TKey, TValue>(this.comparator, MIN_HASH_LENGTH);
+        this.innerClear(MIN_HASH_LENGTH);
     }
 
     private rehashUp(): void {

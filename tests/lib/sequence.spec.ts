@@ -1,6 +1,6 @@
 import { expect } from 'chai';
 import _, { DeclarrayError } from '../../dist';
-import { books, cats, persons } from '../models/fixtures';
+import { books, persons } from '../models/fixtures';
 import { AuthorComparator } from '../utils/author-comparator';
 import { CatComparator } from '../utils/cat-comparator';
 import { PersonComparator } from '../utils/person-comparator';

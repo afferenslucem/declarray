@@ -71,4 +71,18 @@ export class Materializer {
 
         return result;
     }
+
+    public static createCompareDictionary<TItem>(
+        array: TItem[],
+        comparator: IEqualityComparator<TItem>,
+        size: number,
+    ): Dictionary<TItem, TItem> {
+        const result = new Dictionary<TItem, TItem>(comparator, size);
+
+        for (let i = 0, len = array.length; i < len; i++) {
+            result.set(array[i], array[i]);
+        }
+
+        return result;
+    }
 }
