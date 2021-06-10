@@ -1408,11 +1408,11 @@ describe('Sequence', () => {
                             },
                             {
                                 name: 'Kitty',
-                                age: 10,
+                                age: 5,
                             },
                             {
                                 name: 'Kitty',
-                                age: 5,
+                                age: 10,
                             },
                             {
                                 name: 'Charlie',

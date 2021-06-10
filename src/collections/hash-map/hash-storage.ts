@@ -71,9 +71,9 @@ export class HashStorage<TKey, TValue> {
     }
 
     private search(bunchIndex: number, key: TKey): Entry<TKey, TValue> {
-        const bunch = this.getBunchOrCreate(bunchIndex);
+        const bunch = this.store[bunchIndex];
 
-        return bunch.find(item => this.comparator.compare(item.key, key) <= 0 && this.comparator.equals(item.key, key));
+        return bunch?.find(item => this.comparator.equals(item.key, key));
     }
 
     private searchIndex(bunchIndex: number, key: TKey): number {
@@ -87,14 +87,8 @@ export class HashStorage<TKey, TValue> {
 
         this.checkDecrementZero(bunch);
 
-        const place = bunch.findIndex(item => this.comparator.compare(item.key, entry.key) >= 0);
-
-        if (place === -1) {
-            bunch.push(entry);
-            this.checkLongestBunch(bunch);
-        } else {
-            bunch.splice(place, 0, entry);
-        }
+        bunch.push(entry);
+        this.checkLongestBunch(bunch);
     }
 
     private removeFromBunch(bunchIndex: number, key: TKey): void {

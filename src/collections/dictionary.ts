@@ -3,7 +3,7 @@ import { DefaultComparator } from '../utils/default-comparator';
 import { HashStorage } from './hash-map/hash-storage';
 
 const REHASH_INDEX = 10;
-const CRITICAL_BUNCH_LENGTH = 10;
+const CRITICAL_BUNCH_LENGTH = 3;
 const REHASH_DOWN_THRESHOLD = 0.85;
 const MIN_HASH_LENGTH = 100;
 const MAX_HASH_LENGTH = 10000;
