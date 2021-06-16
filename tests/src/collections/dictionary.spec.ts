@@ -266,7 +266,7 @@ describe('Dictionary', () => {
                 dictionary.set(i.toString(), i);
             }
 
-            expect(spy.callCount).equal(2);
+            expect(spy.callCount).equal(1);
         });
 
         it('Remove with rehash', () => {
@@ -289,7 +289,7 @@ describe('Dictionary', () => {
                 dictionary.remove(i.toString());
             }
 
-            expect(spy.callCount).equal(2);
+            expect(spy.callCount).equal(1);
         });
 
         it('rehash should save all values', () => {

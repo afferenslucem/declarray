@@ -8,11 +8,6 @@ export class HashStorage<TKey, TValue> {
     private _count: number;
 
     private _zeroBunches = 0;
-    private _longestBunch = 0;
-
-    public get longestBunch(): number {
-        return this._longestBunch;
-    }
 
     public get zeroBunches(): number {
         return this._zeroBunches;
@@ -24,6 +19,10 @@ export class HashStorage<TKey, TValue> {
 
     public get count(): number {
         return this._count;
+    }
+
+    public get pressure(): number {
+        return 1 - this.zeroBunches / this.hashSize;
     }
 
     public constructor(comparator: IEqualityComparator<TKey>, length: number) {
@@ -88,7 +87,6 @@ export class HashStorage<TKey, TValue> {
         this.checkDecrementZero(bunch);
 
         bunch.push(entry);
-        this.checkLongestBunch(bunch);
     }
 
     private removeFromBunch(bunchIndex: number, key: TKey): void {
@@ -111,12 +109,6 @@ export class HashStorage<TKey, TValue> {
         }
 
         return this.store[bunchIndex];
-    }
-
-    private checkLongestBunch(bunch: Entry<TKey, TValue>[]): void {
-        if (bunch.length > this.longestBunch) {
-            this._longestBunch = bunch.length;
-        }
     }
 
     private checkIncrementZero(bunch: Entry<TKey, TValue>[]): void {

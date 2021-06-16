@@ -3,10 +3,10 @@ import { DefaultComparator } from '../utils/default-comparator';
 import { HashStorage } from './hash-map/hash-storage';
 
 const REHASH_INDEX = 10;
-const CRITICAL_BUNCH_LENGTH = 3;
 const REHASH_DOWN_THRESHOLD = 0.85;
+const REHASH_UP_THRESHOLD = 0.7;
 const MIN_HASH_LENGTH = 100;
-const MAX_HASH_LENGTH = 10000;
+const MAX_HASH_LENGTH = Math.floor(2 ** 30 / REHASH_INDEX);
 
 export class Dictionary<TKey, TValue> {
     private comparator: IEqualityComparator<TKey> = null;
@@ -45,7 +45,7 @@ export class Dictionary<TKey, TValue> {
     public set(key: TKey, value: TValue): void {
         this.hashStorage.set({ key, value });
 
-        if (this.hashStorage.longestBunch >= CRITICAL_BUNCH_LENGTH) {
+        if (this.hashStorage.hashSize <= MAX_HASH_LENGTH && this.hashStorage.pressure >= REHASH_UP_THRESHOLD) {
             this.rehashUp();
         }
     }
