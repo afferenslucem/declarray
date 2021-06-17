@@ -19,7 +19,7 @@ export class Sequence<TInner, TOuter = TInner> implements ISequence<TOuter> {
     private static defaultZip: ZipExpression<any, any, any> = (a, b) => [a, b];
 
     protected innerCollection: ISequence<TInner>;
-    private _computed: TOuter[];
+    protected _computed: TOuter[];
 
     public constructor(inner: ISequence<TInner> | TOuter[]) {
         if (Array.isArray(inner)) {

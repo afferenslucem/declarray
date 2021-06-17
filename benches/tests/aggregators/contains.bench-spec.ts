@@ -9,10 +9,12 @@ const testArray = new Array(count).fill(0).map(() => (Math.random() * 100000) % 
 const seq = _(testArray);
 const nativeArray = Array.from(testArray);
 
+const target = testArray[99];
+
 function bench(): Suite {
     return getSuite('Contains')
-        .add('Array.indexOf', () => nativeArray.indexOf(testArray[99]))
-        .add('Sequence.contains', () => seq.contains(testArray[99]));
+        .add('Array.indexOf', () => nativeArray.indexOf(target) !== -1)
+        .add('Sequence.contains', () => seq.contains(target));
 }
 
 bench_describe('Contains Race', function () {
