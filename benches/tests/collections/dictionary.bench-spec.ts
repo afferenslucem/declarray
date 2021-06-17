@@ -7,29 +7,44 @@ const count = 100;
 let customDictionary: Dictionary<string, number> = null;
 let nativeMap: Map<string, number> = null;
 
-function bench(): Suite {
-    return getSuite('Map', () => {
-        customDictionary = new Dictionary<string, number>();
-        nativeMap = new Map<string, number>();
+function onStart(): void {
+    customDictionary = new Dictionary<string, number>();
+    nativeMap = new Map<string, number>();
 
-        for (let i = 0; i < count; i++) {
-            customDictionary.set(i.toString(), i);
-            nativeMap.set(i.toString(), i);
-        }
-    })
+    for (let i = 0; i < count; i++) {
+        customDictionary.set(i.toString(), i);
+        nativeMap.set(i.toString(), i);
+    }
+}
+
+function setMeasure(): Suite {
+    return getSuite('Dictionary set check', () => onStart())
+        .add('Native Map set', () => {
+            const map = new Map<string, number>();
+
+            for (let i = 0; i < count; i++) {
+                map.set(i.toString(), i);
+            }
+        })
         .add('Dictionary set', () => {
             const dictionary = new Dictionary<string, number>();
 
             for (let i = 0; i < count; i++) {
                 dictionary.set(i.toString(), i);
             }
-        })
-        .add('Map set', () => {
-            const map = new Map<string, number>();
+        });
+}
+
+function getMeasure(): Suite {
+    return getSuite('Dictionary get check', () => onStart())
+        .add('Native Map get', () => {
+            let temp = 0;
 
             for (let i = 0; i < count; i++) {
-                map.set(i.toString(), i);
+                temp = nativeMap.get(i.toString());
             }
+
+            return temp;
         })
         .add('Dictionary get', () => {
             let temp = 0;
@@ -39,15 +54,17 @@ function bench(): Suite {
             }
 
             return temp;
-        })
-        .add('Map get', () => {
-            let temp = 0;
+        });
+}
 
+function removeMeasure(): Suite {
+    return getSuite('Dictionary remove check', () => onStart())
+        .add('Native Map remove', () => {
             for (let i = 0; i < count; i++) {
-                temp = nativeMap.get(i.toString());
+                nativeMap.delete(i.toString());
             }
 
-            return temp;
+            return nativeMap;
         })
         .add('Dictionary remove', () => {
             for (let i = 0; i < count; i++) {
@@ -55,10 +72,14 @@ function bench(): Suite {
             }
 
             return customDictionary;
-        })
-        .add('Map remove', () => {
+        });
+}
+
+function containsMeasure(): Suite {
+    return getSuite('Dictionary contains check', () => onStart())
+        .add('Native Map has', () => {
             for (let i = 0; i < count; i++) {
-                nativeMap.delete(i.toString());
+                nativeMap.has(i.toString());
             }
 
             return nativeMap;
@@ -69,20 +90,24 @@ function bench(): Suite {
             }
 
             return customDictionary;
-        })
-        .add('Map has', () => {
-            for (let i = 0; i < count; i++) {
-                nativeMap.has(i.toString());
-            }
-
-            return nativeMap;
         });
 }
 
 bench_describe('Map Race', function () {
-    bit(`Map vs Dictionary`, () => {
-        bench().run();
-
+    bit(`Set check`, () => {
+        setMeasure().run();
+        appendLog(`###`);
+    });
+    bit(`Get check`, () => {
+        getMeasure().run();
+        appendLog(`###`);
+    });
+    bit(`Remove check`, () => {
+        removeMeasure().run();
+        appendLog(`###`);
+    });
+    bit(`Contains check`, () => {
+        containsMeasure().run();
         appendLog(`###`);
     });
 });

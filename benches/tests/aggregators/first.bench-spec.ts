@@ -11,8 +11,8 @@ const nativeArray = Array.from(testArray);
 
 function bench(): Suite {
     return getSuite('First')
-        .add('Sequence.first', () => seq.first(item => item >= testArray[99]))
-        .add('Array.findIndex', () => nativeArray.findIndex(item => item >= testArray[99]));
+        .add('Array.findIndex', () => nativeArray.findIndex(item => item >= testArray[99]))
+        .add('Sequence.first', () => seq.first(item => item >= testArray[99]));
 }
 
 bench_describe('First Race', function () {

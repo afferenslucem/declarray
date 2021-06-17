@@ -11,8 +11,8 @@ const nativeArray = Array.from(testArray);
 
 function bench(): Suite {
     return getSuite('Aggregate')
-        .add('Sequence.aggregate', () => seq.aggregate((a, b) => a + b))
-        .add('Array.reduce', () => nativeArray.reduce((a, b) => a + b));
+        .add('Array.reduce', () => nativeArray.reduce((a, b) => a + b))
+        .add('Sequence.aggregate', () => seq.aggregate((a, b) => a + b));
 }
 
 bench_describe('Aggregate Race', function () {

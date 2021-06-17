@@ -11,8 +11,8 @@ const nativeArray = Array.from(testArray);
 
 function bench(): Suite {
     return getSuite('Skip')
-        .add('Sequence.take', () => seq.take(50).toArray())
-        .add('Array.slice', () => nativeArray.slice(-50));
+        .add('Array.slice', () => nativeArray.slice(-50))
+        .add('Sequence.take', () => seq.take(50).toArray());
 }
 
 bench_describe('Take Race', function () {

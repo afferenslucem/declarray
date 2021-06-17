@@ -12,8 +12,8 @@ const nativeArray = Array.from(testArray);
 
 function bench(): Suite {
     return getSuite('Any')
-        .add('Sequence.any', () => seq.any(item => item % 2))
-        .add('Array.every', () => nativeArray.some(item => item % 2));
+        .add('Array.some', () => nativeArray.some(item => item % 2))
+        .add('Sequence.any', () => seq.any(item => item % 2));
 }
 
 bench_describe('Any Race', function () {

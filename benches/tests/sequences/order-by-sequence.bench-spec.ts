@@ -11,8 +11,8 @@ const nativeArray = Array.from(testArray);
 
 function bench(): Suite {
     return getSuite('Sort')
-        .add('Sequence.orderBy', () => seq.orderBy(item => item).toArray())
-        .add('Array.sort', () => nativeArray.sort((a, b) => a - b));
+        .add('Array.sort', () => nativeArray.sort((a, b) => a - b))
+        .add('Sequence.orderBy', () => seq.orderBy(item => item).toArray());
 }
 
 bench_describe('Sort Race', function () {

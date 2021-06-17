@@ -16,8 +16,8 @@ const nativeArray = Array.from(testArray);
 
 function bench(): Suite {
     return getSuite('Select Many')
-        .add('Sequence.selectMany', () => seq.selectMany(item => item.map(item => item * 2)).toArray())
-        .add('Array.map-reduce', () => nativeArray.map(item => item.map(num => num * 2)).reduce(flatten, []));
+        .add('Array.map-reduce', () => nativeArray.map(item => item.map(num => num * 2)).reduce(flatten, []))
+        .add('Sequence.selectMany', () => seq.selectMany(item => item.map(item => item * 2)).toArray());
 }
 
 bench_describe('SelectMany Race', function () {

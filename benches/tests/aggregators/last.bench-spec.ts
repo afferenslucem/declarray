@@ -11,8 +11,8 @@ const nativeArray = Array.from(testArray);
 
 function bench(): Suite {
     return getSuite('Last')
-        .add('Sequence.last', () => seq.last(item => item >= testArray[0]))
-        .add('Array.findLastIndex', () => nativeArray.reverse().findIndex(item => item >= testArray[0]));
+        .add('Array.findLastIndex', () => nativeArray.reverse().findIndex(item => item >= testArray[0]))
+        .add('Sequence.last', () => seq.last(item => item >= testArray[0]));
 }
 
 bench_describe('Last Race', function () {

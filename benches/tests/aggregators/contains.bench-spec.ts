@@ -11,8 +11,8 @@ const nativeArray = Array.from(testArray);
 
 function bench(): Suite {
     return getSuite('Contains')
-        .add('Sequence.contains', () => seq.contains(testArray[99]))
-        .add('Array.findIndex', () => nativeArray.indexOf(testArray[99]));
+        .add('Array.indexOf', () => nativeArray.indexOf(testArray[99]))
+        .add('Sequence.contains', () => seq.contains(testArray[99]));
 }
 
 bench_describe('Contains Race', function () {

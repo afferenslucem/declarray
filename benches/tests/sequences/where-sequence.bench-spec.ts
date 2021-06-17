@@ -11,8 +11,8 @@ const nativeArray = Array.from(testArray);
 
 function bench(): Suite {
     return getSuite('Where')
-        .add('Sequence.where', () => seq.where(item => item % 2).toArray())
-        .add('Array.filter', () => nativeArray.filter(item => item % 2));
+        .add('Array.filter', () => nativeArray.filter(item => item % 2))
+        .add('Sequence.where', () => seq.where(item => item % 2).toArray());
 }
 
 bench_describe('Where Race', function () {

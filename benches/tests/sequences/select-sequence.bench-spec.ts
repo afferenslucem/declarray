@@ -11,8 +11,8 @@ const nativeArray = Array.from(testArray);
 
 function bench(): Suite {
     return getSuite('Select')
-        .add('Sequence.select', () => seq.select(item => item * item).toArray())
-        .add('Array.map', () => nativeArray.map(item => item * item));
+        .add('Array.map', () => nativeArray.map(item => item * item))
+        .add('Sequence.select', () => seq.select(item => item * item).toArray());
 }
 
 bench_describe('Select Race', function () {
