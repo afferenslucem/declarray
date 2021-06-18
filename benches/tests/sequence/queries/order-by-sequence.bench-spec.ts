@@ -12,15 +12,19 @@ const nativeArray = Array.from(testArray);
 
 function nativeBench(): Suite {
     return getSuite()
-        .add('Array.sort', () => nativeArray.sort((a, b) => a - b))
+        .add('Array.sort', () => {
+            const copyForSort = Array.from(nativeArray);
+            return copyForSort.sort((a, b) => a - b);
+        })
         .add('Sequence.orderBy', () => seq.orderBy(item => item).toArray());
 }
 
 function singleBench(): Suite {
     return getSuite()
         .add('Array.sort', () => {
-            const copy = Array.from(nativeArray);
-            return copy.sort((a, b) => a - b);
+            const copyForFunc = Array.from(nativeArray);
+            const copyForSort = Array.from(copyForFunc);
+            return Array.from(copyForSort).sort((a, b) => a - b);
         })
         .add('Sequence.orderBy', () =>
             _(nativeArray)
