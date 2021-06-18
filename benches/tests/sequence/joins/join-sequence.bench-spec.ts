@@ -1,7 +1,7 @@
-import { appendLog, bench_describe, bit, getSuite } from '../../common/suite';
+import { appendLog, bench_describe, bit, getSuite } from '../../../common/suite';
 import { Suite } from 'benchmark';
-import _ from '../../../dist';
-import { ISequence } from '../../../dist';
+import _ from '../../../../dist';
+import { ISequence } from '../../../../dist';
 
 function rand(): number {
     return (Math.random() * 1000000) | 0;
@@ -37,7 +37,5 @@ function bench(): Suite {
 bench_describe('Sets race', function () {
     bit(`Sequence`, () => {
         bench().run();
-
-        appendLog(`###`);
     });
 });

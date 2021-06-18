@@ -21,10 +21,10 @@ export function appendLog(value: string): void {
 
 export const BENCH_TIMEOUT = '200s';
 
-export function getSuite(name: string, onStart?: () => void, onComplite?: () => void): Suite {
+export function getSuite(name: string = null, onStart?: () => void, onComplite?: () => void): Suite {
     const statistic: Benchmark[] = [];
 
-    const suite = new Suite(name, {
+    const suite = new Suite(null, {
         onCycle: (event: Event) => {
             statistic.push(event.target as any);
         },

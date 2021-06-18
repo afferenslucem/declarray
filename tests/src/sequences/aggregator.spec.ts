@@ -358,7 +358,7 @@ describe('Aggregator', () => {
                 expect(result).equal(false);
             });
 
-            it('should return false for different sequences', () => {
+            it('should return false for different queries', () => {
                 const first = new Sequence([9, 0, 11]);
                 const second = new Sequence([9, 0, 13]);
 
@@ -387,7 +387,7 @@ describe('Aggregator', () => {
         });
 
         describe('objects', () => {
-            it('should return false for different sequences', () => {
+            it('should return false for different queries', () => {
                 const first = new Sequence([
                     {
                         name: 'Charlie',
