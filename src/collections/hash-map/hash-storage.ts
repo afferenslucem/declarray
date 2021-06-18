@@ -7,12 +7,10 @@ export class HashStorage<TKey, TValue> {
 
     private _count: number;
 
-    public get longestBunch(): number {
-        return this.store.reduce((acc, item) => Math.max(acc, item.length), 0);
-    }
+    private _zeroBunches = 0;
 
     public get zeroBunches(): number {
-        return this.store.reduce((acc, item) => acc + Number(item.length === 0), 0) / this.store.length;
+        return this._zeroBunches;
     }
 
     public get hashSize(): number {
@@ -23,20 +21,17 @@ export class HashStorage<TKey, TValue> {
         return this._count;
     }
 
+    public get pressure(): number {
+        return 1 - this.zeroBunches / this.hashSize;
+    }
+
     public constructor(comparator: IEqualityComparator<TKey>, length: number) {
         this.comparator = comparator;
 
-        this.fillStore(length);
-
         this._count = 0;
-    }
 
-    private fillStore(length: number): void {
-        this.store = [];
-
-        for (let i = 0; i < length; i++) {
-            this.store.push([]);
-        }
+        this.store = new Array(length);
+        this._zeroBunches = length;
     }
 
     public set(entry: Entry<TKey, TValue>): void {
@@ -77,35 +72,54 @@ export class HashStorage<TKey, TValue> {
     private search(bunchIndex: number, key: TKey): Entry<TKey, TValue> {
         const bunch = this.store[bunchIndex];
 
-        return bunch.find(item => this.comparator.compare(item.key, key) <= 0 && this.comparator.equals(item.key, key));
+        return bunch?.find(item => this.comparator.equals(item.key, key));
     }
 
     private searchIndex(bunchIndex: number, key: TKey): number {
-        const bunch = this.store[bunchIndex];
+        const bunch = this.getBunchOrCreate(bunchIndex);
 
         return bunch.findIndex(item => this.comparator.compare(item.key, key) <= 0 && this.comparator.equals(item.key, key));
     }
 
     private pushToBunch(bunchIndex: number, entry: Entry<TKey, TValue>): void {
-        const bunch = this.store[bunchIndex];
+        const bunch = this.getBunchOrCreate(bunchIndex);
 
-        const place = bunch.findIndex(item => this.comparator.compare(item.key, entry.key) >= 0);
+        this.checkDecrementZero(bunch);
 
-        if (place === -1) {
-            bunch.push(entry);
-        } else {
-            bunch.splice(place, 0, entry);
-        }
+        bunch.push(entry);
     }
 
     private removeFromBunch(bunchIndex: number, key: TKey): void {
-        const bunch = this.store[bunchIndex];
+        const bunch = this.getBunchOrCreate(bunchIndex);
 
         const idx = this.searchIndex(bunchIndex, key);
 
         if (idx !== -1) {
             bunch.splice(idx, 1);
             this._count--;
+            this.checkIncrementZero(bunch);
+        }
+    }
+
+    private getBunchOrCreate(bunchIndex: number): Entry<TKey, TValue>[] {
+        const bunch = this.store[bunchIndex];
+
+        if (!bunch) {
+            this.store[bunchIndex] = [];
+        }
+
+        return this.store[bunchIndex];
+    }
+
+    private checkIncrementZero(bunch: Entry<TKey, TValue>[]): void {
+        if (!bunch.length) {
+            this._zeroBunches++;
+        }
+    }
+
+    private checkDecrementZero(bunch: Entry<TKey, TValue>[]): void {
+        if (!bunch.length) {
+            this._zeroBunches--;
         }
     }
 }

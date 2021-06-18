@@ -44,11 +44,7 @@ export class Aggregator {
     public static contains<TInner>(sequence: ISequence<TInner>, target: TInner, comparator: IEqualityComparator<TInner>): boolean {
         const data = sequence.toArray();
 
-        if (this.isPrimitive(target) && comparator instanceof DefaultComparator) {
-            return data.includes(target);
-        } else {
-            return data.findIndex(item => comparator.equals(item, target)) !== -1;
-        }
+        return data.findIndex(item => comparator.equals(item, target)) !== -1;
     }
 
     public static count<TInner>(sequence: ISequence<TInner>, whereCondition?: WhereCondition<TInner>): number {
@@ -241,9 +237,5 @@ export class Aggregator {
         } else {
             return array[array.length - 1];
         }
-    }
-
-    private static isPrimitive(item: any): boolean {
-        return typeof item !== 'object' && typeof item !== 'function';
     }
 }

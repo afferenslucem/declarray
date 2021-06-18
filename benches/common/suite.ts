@@ -1,6 +1,7 @@
 import { Event, Suite } from 'benchmark';
 import { describe, Func, Test } from 'mocha';
 import fs from 'fs';
+import Benchmark = require('benchmark');
 
 const outFileName = 'benchmark-output.txt';
 
@@ -20,12 +21,12 @@ export function appendLog(value: string): void {
 
 export const BENCH_TIMEOUT = '200s';
 
-export function getSuite(name: string, onStart?: () => void, onComplite?: () => void): Suite {
-    const suite = new Suite(name, {
+export function getSuite(name: string = null, onStart?: () => void, onComplite?: () => void): Suite {
+    const statistic: Benchmark[] = [];
+
+    const suite = new Suite(null, {
         onCycle: (event: Event) => {
-            const log = String(event.target);
-            appendLog(log);
-            console.log(log);
+            statistic.push(event.target as any);
         },
         onStart: () => {
             if (onStart != null) {
@@ -33,6 +34,9 @@ export function getSuite(name: string, onStart?: () => void, onComplite?: () => 
             }
         },
         onComplete: () => {
+            const report = createReport();
+            appendLog(report);
+            console.log(report);
             if (onComplite != null) {
                 onComplite();
             }
@@ -41,6 +45,20 @@ export function getSuite(name: string, onStart?: () => void, onComplite?: () => 
             console.warn(...args);
         },
     });
+
+    function createReport(): string {
+        const basis = statistic[0];
+
+        const comparings = statistic.map(item => createComparing(basis, item));
+
+        return comparings.join('\n');
+    }
+
+    function createComparing(basis: Benchmark, target: Benchmark): string {
+        return `${(target as any).name} x ${(target.hz / basis.hz).toFixed(2)} x dev ±${target.stats.rme.toFixed(2)}% (${
+            target.stats.sample.length
+        } runs sampled)`;
+    }
 
     return suite;
 }

@@ -285,7 +285,7 @@ describe('Dictionary', () => {
                 origin.apply(this, args);
             });
 
-            for (let i = 0; i < 990; i++) {
+            for (let i = 0; i < 991; i++) {
                 dictionary.remove(i.toString());
             }
 

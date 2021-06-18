@@ -1,6 +1,6 @@
 import { expect } from 'chai';
 import _, { DeclarrayError } from '../../dist';
-import { books, cats, persons } from '../models/fixtures';
+import { books, persons } from '../models/fixtures';
 import { AuthorComparator } from '../utils/author-comparator';
 import { CatComparator } from '../utils/cat-comparator';
 import { PersonComparator } from '../utils/person-comparator';
@@ -1408,11 +1408,11 @@ describe('Sequence', () => {
                             },
                             {
                                 name: 'Kitty',
-                                age: 10,
+                                age: 5,
                             },
                             {
                                 name: 'Kitty',
-                                age: 5,
+                                age: 10,
                             },
                             {
                                 name: 'Charlie',
@@ -1424,7 +1424,7 @@ describe('Sequence', () => {
             });
 
             describe('zip', () => {
-                it('zip sequences', () => {
+                it('zip queries', () => {
                     const first = _([1, 2, 3, 4, 5]);
                     const second = _([6, 7, 8, 9, 0]);
 
@@ -1439,7 +1439,7 @@ describe('Sequence', () => {
                     ]);
                 });
 
-                it('zip sequences with array', () => {
+                it('zip queries with array', () => {
                     const first = _([1, 2, 3, 4, 5]);
 
                     const result = first.zip([6, 7, 8, 9, 0], (a, b) => a + b).toArray();

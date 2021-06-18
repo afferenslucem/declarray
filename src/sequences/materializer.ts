@@ -25,15 +25,7 @@ export class Materializer {
     }
 
     public static toHashSet<TItem>(sequence: ISequence<TItem>, comparator?: IEqualityComparator<TItem>): HashSet<TItem> {
-        const result = new HashSet<TItem>(comparator || Materializer.defaultComparator);
-
-        const array = sequence.toArray();
-
-        for (let i = 0, len = array.length; i < len; i++) {
-            result.add(array[i]);
-        }
-
-        return result;
+        return HashSet.from<TItem>(sequence, comparator || Materializer.defaultComparator);
     }
 
     public static toDictionary<TItem, TKey, TValue>(
@@ -67,6 +59,20 @@ export class Materializer {
 
                 result.set(key, value);
             }
+        }
+
+        return result;
+    }
+
+    public static createCompareDictionary<TItem>(
+        array: TItem[],
+        comparator: IEqualityComparator<TItem>,
+        size: number,
+    ): Dictionary<TItem, TItem> {
+        const result = new Dictionary<TItem, TItem>(comparator, size);
+
+        for (let i = 0, len = array.length; i < len; i++) {
+            result.set(array[i], array[i]);
         }
 
         return result;
