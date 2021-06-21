@@ -80,7 +80,7 @@ describe('Dictionary', () => {
 
                 const result = dictionary.keys;
 
-                expect(result).deep.equal(['key3', 'key', 'key2']);
+                expect(result).deep.equal(['key', 'key2', 'key3']);
             });
 
             it('values', () => {
@@ -91,7 +91,7 @@ describe('Dictionary', () => {
 
                 const result = dictionary.values;
 
-                expect(result).deep.equal([999, 777, 888]);
+                expect(result).deep.equal([777, 888, 999]);
             });
 
             it('entries', () => {
@@ -103,9 +103,9 @@ describe('Dictionary', () => {
                 const result = dictionary.entries;
 
                 expect(result).deep.equal([
-                    ['key3', 999],
                     ['key', 777],
                     ['key2', 888],
+                    ['key3', 999],
                 ]);
             });
 
@@ -207,7 +207,7 @@ describe('Dictionary', () => {
 
                 const result = dictionary.keys;
 
-                expect(result).deep.equal([cats[2], cats[0], cats[1]]);
+                expect(result).deep.equal([cats[0], cats[1], cats[2]]);
             });
 
             it('values', () => {
@@ -218,7 +218,7 @@ describe('Dictionary', () => {
 
                 const result = dictionary.values;
 
-                expect(result).deep.equal([persons[3], persons[2], persons[2]]);
+                expect(result).deep.equal([persons[2], persons[2], persons[3]]);
             });
 
             it('entries', () => {
@@ -230,9 +230,9 @@ describe('Dictionary', () => {
                 const result = dictionary.entries;
 
                 expect(result).deep.equal([
-                    [cats[2], persons[3]],
                     [cats[0], persons[2]],
                     [cats[1], persons[2]],
+                    [cats[2], persons[3]],
                 ]);
             });
 
@@ -246,64 +246,6 @@ describe('Dictionary', () => {
 
                 expect(result).equal(3);
             });
-        });
-    });
-
-    describe('rehash', () => {
-        it('Insert with rehash', () => {
-            const dictionary = new Dictionary<string, number>();
-
-            // @ts-ignore;
-            const origin = dictionary.rehash;
-
-            // @ts-ignore
-            const spy = sinon.stub(dictionary, 'rehash').callsFake(function (...args) {
-                // @ts-ignore
-                origin.apply(this, args);
-            });
-
-            for (let i = 0; i < 1000; i++) {
-                dictionary.set(i.toString(), i);
-            }
-
-            expect(spy.callCount).equal(1);
-        });
-
-        it('Remove with rehash', () => {
-            const dictionary = new Dictionary<string, number>();
-
-            for (let i = 0; i < 1000; i++) {
-                dictionary.set(i.toString(), i);
-            }
-
-            // @ts-ignore;
-            const origin = dictionary.rehash;
-
-            // @ts-ignore
-            const spy = sinon.stub(dictionary, 'rehash').callsFake(function (...args) {
-                // @ts-ignore
-                origin.apply(this, args);
-            });
-
-            for (let i = 0; i < 991; i++) {
-                dictionary.remove(i.toString());
-            }
-
-            expect(spy.callCount).equal(1);
-        });
-
-        it('rehash should save all values', () => {
-            const dictionary = new Dictionary<string, number>();
-
-            for (let i = 0; i < 10000; i++) {
-                dictionary.set(i.toString(), i);
-            }
-
-            for (let i = 0; i < 10000; i++) {
-                const result = dictionary.containsKey(i.toString());
-
-                expect(result).equal(true);
-            }
         });
     });
 });

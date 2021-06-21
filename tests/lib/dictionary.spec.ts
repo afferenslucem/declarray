@@ -64,14 +64,14 @@ describe('Dictionary', () => {
             dictionary.set('one', 1);
             dictionary.set('two', 2);
 
-            expect(dictionary.values).deep.equal([2, 1]);
+            expect(dictionary.values).deep.equal([1, 2]);
         });
 
         it('keys', () => {
             dictionary.set('one', 1);
             dictionary.set('two', 2);
 
-            expect(dictionary.keys).deep.equal(['two', 'one']);
+            expect(dictionary.keys).deep.equal(['one', 'two']);
         });
 
         it('entries', () => {
@@ -79,8 +79,8 @@ describe('Dictionary', () => {
             dictionary.set('two', 2);
 
             expect(dictionary.entries).deep.equal([
-                ['two', 2],
                 ['one', 1],
+                ['two', 2],
             ]);
         });
     });
@@ -349,4 +349,20 @@ describe('Dictionary', () => {
             ]);
         });
     });
+
+    // it('Collision check', function () {
+    //     this.timeout('200s');
+    //
+    //     const dictionary = new Dictionary<string, string>();
+    //
+    //     for (let i = 0; i < 1000000; i++) {
+    //         dictionary.set(i.toString(), i.toString());
+    //     }
+    //
+    //     for (let i = 0; i < 1000000; i++) {
+    //         const value = dictionary.get(i.toString());
+    //
+    //         expect(value).equal(i.toString());
+    //     }
+    // });
 });

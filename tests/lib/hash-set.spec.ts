@@ -55,7 +55,7 @@ describe('HashSet', () => {
             set.add('one');
             set.add('two');
 
-            expect(set.entries).deep.equal(['two', 'one']);
+            expect(set.entries).deep.equal(['one', 'two']);
         });
     });
 
@@ -155,12 +155,12 @@ describe('HashSet', () => {
 
             expect(set.entries).deep.equal([
                 {
-                    name: 'Boris',
-                    age: 33,
-                },
-                {
                     name: 'Alex',
                     age: 24,
+                },
+                {
+                    name: 'Boris',
+                    age: 33,
                 },
             ]);
         });

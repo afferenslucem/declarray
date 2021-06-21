@@ -55,8 +55,8 @@ describe('Lookup', () => {
                 const entries = lookup.entries;
 
                 expect(entries).deep.equal([
-                    ['two', [2, 2]],
                     ['one', [1, 1]],
+                    ['two', [2, 2]],
                     ['three', [3]],
                 ]);
             });
@@ -107,9 +107,9 @@ describe('Lookup', () => {
                 const entries = lookup.entries;
 
                 expect(entries).deep.equal([
-                    [cats[2], ['mouse']],
                     [cats[0], ['trackball', 'laser']],
                     [cats[1], ['laser', 'mouse']],
+                    [cats[2], ['mouse']],
                 ]);
             });
         });

@@ -38,9 +38,9 @@ const cats = [
 const result = _(cats).toDictionary(item => item.age).entries;
 
 expect(result).deep.equal([
-    [1, { name: 'Lulya', age: 1 }],
-    [4, { name: 'Cherry', age: 4 }],
     [9, { name: 'Barsik', age: 9 }],
+    [4, { name: 'Cherry', age: 4 }],
+    [1, { name: 'Lulya', age: 1 }],
 ]);
 ```
 
@@ -74,8 +74,8 @@ const catComparer: IEqualityComparator<any> = {
 const result = _(cats).toHashSet(catComparer).entries;
 
 expect(result).deep.equal([
-    { name: 'Cherry', age: 4 },
     { name: 'Barsik', age: 9 },
+    { name: 'Cherry', age: 4 },
     { name: 'Lulya', age: 1 },
 ]);
 ```
@@ -97,7 +97,7 @@ const cats = [
 const result = _(cats).toLookup(item => item.age).entries;
 
 expect(result).deep.equal([
-    [1, [{ name: 'Lulya', age: 1 }]],
+    [9, [{ name: 'Barsik', age: 9 }]],
     [
         4,
         [
@@ -105,6 +105,6 @@ expect(result).deep.equal([
             { name: 'Feya', age: 4 },
         ],
     ],
-    [9, [{ name: 'Barsik', age: 9 }]],
+    [1, [{ name: 'Lulya', age: 1 }]],
 ]);
 ```

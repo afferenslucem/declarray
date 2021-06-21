@@ -37,12 +37,12 @@ describe('GroupSequence', () => {
 
             expect(result).deep.equal([
                 {
-                    key: false,
-                    group: new Sequence([2, 4, 6]),
-                },
-                {
                     key: true,
                     group: new Sequence([1, 3, 5]),
+                },
+                {
+                    key: false,
+                    group: new Sequence([2, 4, 6]),
                 },
             ]);
         });
@@ -60,12 +60,12 @@ describe('GroupSequence', () => {
 
             expect(result).deep.equal([
                 {
-                    key: false,
-                    group: [2, 4, 6],
-                },
-                {
                     key: true,
                     group: [1, 3, 5],
+                },
+                {
+                    key: false,
+                    group: [2, 4, 6],
                 },
             ]);
         });
@@ -91,6 +91,15 @@ describe('GroupSequence', () => {
                     ]),
                 },
                 {
+                    key: ['Федор Достоевский'],
+                    group: new Sequence([
+                        {
+                            name: 'Преступление и наказание',
+                            authors: ['Федор Достоевский'],
+                        },
+                    ]),
+                },
+                {
                     key: ['Дмитрий Глуховский'],
                     group: new Sequence([
                         {
@@ -100,15 +109,6 @@ describe('GroupSequence', () => {
                         {
                             name: 'Метро 2033',
                             authors: ['Дмитрий Глуховский'],
-                        },
-                    ]),
-                },
-                {
-                    key: ['Федор Достоевский'],
-                    group: new Sequence([
-                        {
-                            name: 'Преступление и наказание',
-                            authors: ['Федор Достоевский'],
                         },
                     ]),
                 },
@@ -136,12 +136,12 @@ describe('GroupSequence', () => {
                     group: ['Мастер и Маргарита'],
                 },
                 {
-                    key: ['Дмитрий Глуховский'],
-                    group: ['Метро 2034', 'Метро 2033'],
-                },
-                {
                     key: ['Федор Достоевский'],
                     group: ['Преступление и наказание'],
+                },
+                {
+                    key: ['Дмитрий Глуховский'],
+                    group: ['Метро 2034', 'Метро 2033'],
                 },
             ]);
         });
