@@ -21,9 +21,7 @@ export class HashSet<T> {
     }
 
     public add(item: T): void {
-        if (!this.storage.containsKey(item)) {
-            this.storage.set(item, item);
-        }
+        this.storage.setIfKeyNotExists(item, item);
     }
 
     public remove(item: T): void {

@@ -1,6 +1,5 @@
 import { IEqualityComparator } from '../interfaces/i-equality-comparator';
 import { DefaultComparator } from '../utils/default-comparator';
-import { HashStorage } from './hash-map/hash-storage';
 import { Entry } from '../models/entry';
 
 declare type Bunch<TKey, TValue> = Array<Entry<TKey, TValue>>;
@@ -51,6 +50,23 @@ export class Dictionary<TKey, TValue> {
         }
     }
 
+    public setIfKeyNotExists(key: TKey, value: TValue): void {
+        const hash = this.comparator.getHashCode(key);
+        const bunch = this.hashStorage.get(hash);
+
+        const entry = {
+            key,
+            value,
+        };
+
+        if (bunch) {
+            this.tryInsertUniqueToBunch(bunch, entry);
+        } else {
+            const created = this.createBunch(entry);
+            this.hashStorage.set(hash, created);
+        }
+    }
+
     private tryInsertToBunch(bunch: Bunch<TKey, TValue>, entry: Entry<TKey, TValue>): void {
         const item = this.findAtBunch(bunch, entry.key);
 
@@ -59,14 +75,17 @@ export class Dictionary<TKey, TValue> {
             return;
         }
 
-        const target = this.findInsertIndex(bunch, entry.key);
+        this.saveToBunch(bunch, entry);
+    }
 
-        if (target === -1) {
-            bunch.push(entry);
-        } else {
-            bunch.splice(target, 0, entry);
-            this.itemsCount++;
+    private tryInsertUniqueToBunch(bunch: Bunch<TKey, TValue>, entry: Entry<TKey, TValue>): void {
+        const item = this.findAtBunch(bunch, entry.key);
+
+        if (item) {
+            return;
         }
+
+        this.saveToBunch(bunch, entry);
     }
 
     private createBunch(entry: Entry<TKey, TValue>): Bunch<TKey, TValue> {
@@ -119,6 +138,17 @@ export class Dictionary<TKey, TValue> {
     public clear(): void {
         this.hashStorage.clear();
         this.itemsCount = 0;
+    }
+
+    private saveToBunch(bunch: Bunch<TKey, TValue>, entry: Entry<TKey, TValue>): void {
+        const target = this.findInsertIndex(bunch, entry.key);
+
+        if (target === -1) {
+            bunch.push(entry);
+        } else {
+            bunch.splice(target, 0, entry);
+            this.itemsCount++;
+        }
     }
 
     private findAtBunch(bunch: Bunch<TKey, TValue>, key: TKey): Entry<TKey, TValue> {

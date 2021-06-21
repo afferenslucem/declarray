@@ -26,6 +26,16 @@ describe('Dictionary', () => {
                 expect(value).equal(expected);
             });
 
+            it('setIfKeyNotExists/get', () => {
+                dictionary.setIfKeyNotExists('key', 777);
+
+                const value = dictionary.get('key');
+
+                const expected = 777;
+
+                expect(value).equal(expected);
+            });
+
             it('set/update', () => {
                 dictionary.set('key', 777);
                 dictionary.set('key', 888);
@@ -33,6 +43,17 @@ describe('Dictionary', () => {
                 const value = dictionary.get('key');
 
                 const expected = 888;
+
+                expect(value).equal(expected);
+            });
+
+            it('set/update', () => {
+                dictionary.set('key', 777);
+                dictionary.setIfKeyNotExists('key', 888);
+
+                const value = dictionary.get('key');
+
+                const expected = 777;
 
                 expect(value).equal(expected);
             });
