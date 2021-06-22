@@ -4,6 +4,11 @@ import { Entry } from '../models/entry';
 
 declare type Bunch<TKey, TValue> = Array<Entry<TKey, TValue>>;
 
+export const FIND_AT_BUNCH = Symbol('DICTIONARY_FIND_AT_BUNCH');
+export const FIND_INSERT_INDEX = Symbol('DICTIONARY_FIND_INSERT_INDEX');
+export const FIND_REMOVE_INDEX = Symbol('DICTIONARY_FIND_REMOVE_INDEX');
+export const INSERT_UNIQUE_KEY = Symbol('DICTIONARY_INSERT_UNIQUE_KEY');
+
 export class Dictionary<TKey, TValue> {
     private comparator: IEqualityComparator<TKey> = null;
     private hashStorage: Map<number, Bunch<TKey, TValue>> = null;
@@ -50,7 +55,7 @@ export class Dictionary<TKey, TValue> {
         }
     }
 
-    public setIfKeyNotExists(key: TKey, value: TValue): void {
+    public [INSERT_UNIQUE_KEY](key: TKey, value: TValue): void {
         const hash = this.comparator.getHashCode(key);
         const bunch = this.hashStorage.get(hash);
 
@@ -68,9 +73,9 @@ export class Dictionary<TKey, TValue> {
     }
 
     private tryInsertToBunch(bunch: Bunch<TKey, TValue>, entry: Entry<TKey, TValue>): void {
-        const item = this.findAtBunch(bunch, entry.key);
+        const item = this[FIND_AT_BUNCH](bunch, entry.key);
 
-        if (item) {
+        if (item != null) {
             item.value = entry.value;
             return;
         }
@@ -79,9 +84,9 @@ export class Dictionary<TKey, TValue> {
     }
 
     private tryInsertUniqueToBunch(bunch: Bunch<TKey, TValue>, entry: Entry<TKey, TValue>): void {
-        const item = this.findAtBunch(bunch, entry.key);
+        const item = this[FIND_AT_BUNCH](bunch, entry.key);
 
-        if (item) {
+        if (item != null) {
             return;
         }
 
@@ -123,9 +128,9 @@ export class Dictionary<TKey, TValue> {
             return;
         }
 
-        const target = this.findRemoveIndex(bunch, key);
+        const target = this[FIND_REMOVE_INDEX](bunch, key);
 
-        if (target !== -1) {
+        if (target != null) {
             bunch.splice(target, 1);
             this.itemsCount--;
         }
@@ -141,9 +146,9 @@ export class Dictionary<TKey, TValue> {
     }
 
     private saveToBunch(bunch: Bunch<TKey, TValue>, entry: Entry<TKey, TValue>): void {
-        const target = this.findInsertIndex(bunch, entry.key);
+        const target = this[FIND_INSERT_INDEX](bunch, entry.key);
 
-        if (target === -1) {
+        if (target == null) {
             bunch.push(entry);
         } else {
             bunch.splice(target, 0, entry);
@@ -151,10 +156,14 @@ export class Dictionary<TKey, TValue> {
         }
     }
 
-    private findAtBunch(bunch: Bunch<TKey, TValue>, key: TKey): Entry<TKey, TValue> {
+    public [FIND_AT_BUNCH](bunch: Bunch<TKey, TValue>, key: TKey): Entry<TKey, TValue> {
         for (let i = 0, len = bunch.length; i < len; i++) {
-            if (this.comparator.compare(bunch[i].key, key) < 0) {
+            const comparing = this.comparator.compare(bunch[i].key, key);
+
+            if (comparing > 0) {
                 break;
+            } else if (comparing < 0) {
+                continue;
             }
 
             if (this.comparator.equals(key, bunch[i].key)) {
@@ -164,19 +173,23 @@ export class Dictionary<TKey, TValue> {
         return undefined;
     }
 
-    private findInsertIndex(bunch: Bunch<TKey, TValue>, key: TKey): number {
+    public [FIND_INSERT_INDEX](bunch: Bunch<TKey, TValue>, key: TKey): number {
         for (let i = 0, len = bunch.length; i < len; i++) {
-            if (this.comparator.compare(bunch[i].key, key) < 0) {
+            if (this.comparator.compare(bunch[i].key, key) > 0) {
                 return i;
             }
         }
-        return -1;
+        return undefined;
     }
 
-    private findRemoveIndex(bunch: Bunch<TKey, TValue>, key: TKey): number {
+    public [FIND_REMOVE_INDEX](bunch: Bunch<TKey, TValue>, key: TKey): number {
         for (let i = 0, len = bunch.length; i < len; i++) {
-            if (this.comparator.compare(bunch[i].key, key) < 0) {
+            const comparing = this.comparator.compare(bunch[i].key, key);
+
+            if (comparing > 0) {
                 break;
+            } else if (comparing < 0) {
+                continue;
             }
 
             if (this.comparator.equals(key, bunch[i].key)) {
@@ -184,6 +197,6 @@ export class Dictionary<TKey, TValue> {
             }
         }
 
-        return -1;
+        return undefined;
     }
 }

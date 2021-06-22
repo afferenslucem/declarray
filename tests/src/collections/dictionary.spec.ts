@@ -5,7 +5,8 @@ import { ICat } from '../../models/i-cat';
 import { IPerson } from '../../models/i-person';
 import { CatComparator } from '../../utils/cat-comparator';
 import { cats, persons } from '../../models/fixtures';
-import { Dictionary } from '../../../src';
+import { Dictionary, FIND_AT_BUNCH, FIND_INSERT_INDEX, FIND_REMOVE_INDEX, INSERT_UNIQUE_KEY } from '../../../src';
+import { Entry } from '../../../src/models/entry';
 
 describe('Dictionary', () => {
     describe('With primitives', () => {
@@ -27,7 +28,7 @@ describe('Dictionary', () => {
             });
 
             it('setIfKeyNotExists/get', () => {
-                dictionary.setIfKeyNotExists('key', 777);
+                dictionary[INSERT_UNIQUE_KEY]('key', 777);
 
                 const value = dictionary.get('key');
 
@@ -49,7 +50,7 @@ describe('Dictionary', () => {
 
             it('set/update', () => {
                 dictionary.set('key', 777);
-                dictionary.setIfKeyNotExists('key', 888);
+                dictionary[INSERT_UNIQUE_KEY]('key', 888);
 
                 const value = dictionary.get('key');
 
@@ -139,6 +140,74 @@ describe('Dictionary', () => {
                 const result = dictionary.length;
 
                 expect(result).equal(3);
+            });
+        });
+
+        describe('Serving methods', () => {
+            let bunch: Entry<number, string>[] = null;
+            const server = new Dictionary<number, string>();
+
+            beforeEach(() => {
+                bunch = [
+                    { key: 0, value: '0' },
+                    { key: 1, value: '1' },
+                    { key: 2, value: '2' },
+                    { key: 3, value: '3' },
+                ];
+            });
+
+            describe('FIND_AT_BUNCH', () => {
+                it('should return entry', () => {
+                    const entry = server[FIND_AT_BUNCH](bunch, 2);
+
+                    expect(entry).deep.equal({ key: 2, value: '2' });
+                });
+
+                it('should return undefined', () => {
+                    const entry = server[FIND_AT_BUNCH](bunch, 4);
+
+                    expect(entry).equal(undefined);
+                });
+            });
+
+            describe('FIND_INSERT_INDEX', () => {
+                it('should return 0', () => {
+                    const index = server[FIND_INSERT_INDEX](bunch, -1);
+
+                    expect(index).equal(0);
+                });
+
+                it('should return 2', () => {
+                    const index = server[FIND_INSERT_INDEX](bunch, 2.5);
+
+                    expect(index).equal(3);
+                });
+
+                it('should return undefined', () => {
+                    const index = server[FIND_INSERT_INDEX](bunch, 5);
+
+                    expect(index).equal(undefined);
+                });
+            });
+
+            describe('FIND_REMOVE_INDEX', () => {
+                it('should return 1', () => {
+                    const index = server[FIND_REMOVE_INDEX](bunch, 1);
+
+                    expect(index).equal(1);
+                });
+
+                it('should return undefined for unexisting middle', () => {
+                    const index = server[FIND_REMOVE_INDEX](bunch, 1.5);
+
+                    expect(index).equal(undefined);
+                });
+
+                it('should return undefined', () => {
+                    const index = server[FIND_REMOVE_INDEX](bunch, 5);
+
+                    expect(index).equal(undefined);
+                });
             });
         });
     });

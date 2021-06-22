@@ -1,4 +1,4 @@
-import { Dictionary } from './dictionary';
+import { Dictionary, INSERT_UNIQUE_KEY } from './dictionary';
 import { IEqualityComparator } from '../interfaces/i-equality-comparator';
 import { ISequence } from '../interfaces/i-sequence';
 
@@ -21,7 +21,7 @@ export class HashSet<T> {
     }
 
     public add(item: T): void {
-        this.storage.setIfKeyNotExists(item, item);
+        this.storage[INSERT_UNIQUE_KEY](item, item);
     }
 
     public remove(item: T): void {
