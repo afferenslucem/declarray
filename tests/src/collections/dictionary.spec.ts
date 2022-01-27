@@ -5,7 +5,8 @@ import { ICat } from '../../models/i-cat';
 import { IPerson } from '../../models/i-person';
 import { CatComparator } from '../../utils/cat-comparator';
 import { cats, persons } from '../../models/fixtures';
-import { Dictionary } from '../../../src';
+import { Dictionary, FIND_AT_BUNCH, FIND_INSERT_INDEX, FIND_REMOVE_INDEX, INSERT_UNIQUE_KEY } from '../../../src';
+import { Entry } from '../../../src/models/entry';
 
 describe('Dictionary', () => {
     describe('With primitives', () => {
@@ -26,6 +27,16 @@ describe('Dictionary', () => {
                 expect(value).equal(expected);
             });
 
+            it('setIfKeyNotExists/get', () => {
+                dictionary[INSERT_UNIQUE_KEY]('key', 777);
+
+                const value = dictionary.get('key');
+
+                const expected = 777;
+
+                expect(value).equal(expected);
+            });
+
             it('set/update', () => {
                 dictionary.set('key', 777);
                 dictionary.set('key', 888);
@@ -33,6 +44,17 @@ describe('Dictionary', () => {
                 const value = dictionary.get('key');
 
                 const expected = 888;
+
+                expect(value).equal(expected);
+            });
+
+            it('set/update', () => {
+                dictionary.set('key', 777);
+                dictionary[INSERT_UNIQUE_KEY]('key', 888);
+
+                const value = dictionary.get('key');
+
+                const expected = 777;
 
                 expect(value).equal(expected);
             });
@@ -80,7 +102,7 @@ describe('Dictionary', () => {
 
                 const result = dictionary.keys;
 
-                expect(result).deep.equal(['key3', 'key', 'key2']);
+                expect(result).deep.equal(['key', 'key2', 'key3']);
             });
 
             it('values', () => {
@@ -91,7 +113,7 @@ describe('Dictionary', () => {
 
                 const result = dictionary.values;
 
-                expect(result).deep.equal([999, 777, 888]);
+                expect(result).deep.equal([777, 888, 999]);
             });
 
             it('entries', () => {
@@ -103,9 +125,9 @@ describe('Dictionary', () => {
                 const result = dictionary.entries;
 
                 expect(result).deep.equal([
-                    ['key3', 999],
                     ['key', 777],
                     ['key2', 888],
+                    ['key3', 999],
                 ]);
             });
 
@@ -118,6 +140,74 @@ describe('Dictionary', () => {
                 const result = dictionary.length;
 
                 expect(result).equal(3);
+            });
+        });
+
+        describe('Serving methods', () => {
+            let bunch: Entry<number, string>[] = null;
+            const server = new Dictionary<number, string>();
+
+            beforeEach(() => {
+                bunch = [
+                    { key: 0, value: '0' },
+                    { key: 1, value: '1' },
+                    { key: 2, value: '2' },
+                    { key: 3, value: '3' },
+                ];
+            });
+
+            describe('FIND_AT_BUNCH', () => {
+                it('should return entry', () => {
+                    const entry = server[FIND_AT_BUNCH](bunch, 2);
+
+                    expect(entry).deep.equal({ key: 2, value: '2' });
+                });
+
+                it('should return undefined', () => {
+                    const entry = server[FIND_AT_BUNCH](bunch, 4);
+
+                    expect(entry).equal(undefined);
+                });
+            });
+
+            describe('FIND_INSERT_INDEX', () => {
+                it('should return 0', () => {
+                    const index = server[FIND_INSERT_INDEX](bunch, -1);
+
+                    expect(index).equal(0);
+                });
+
+                it('should return 2', () => {
+                    const index = server[FIND_INSERT_INDEX](bunch, 2.5);
+
+                    expect(index).equal(3);
+                });
+
+                it('should return undefined', () => {
+                    const index = server[FIND_INSERT_INDEX](bunch, 5);
+
+                    expect(index).equal(undefined);
+                });
+            });
+
+            describe('FIND_REMOVE_INDEX', () => {
+                it('should return 1', () => {
+                    const index = server[FIND_REMOVE_INDEX](bunch, 1);
+
+                    expect(index).equal(1);
+                });
+
+                it('should return undefined for unexisting middle', () => {
+                    const index = server[FIND_REMOVE_INDEX](bunch, 1.5);
+
+                    expect(index).equal(undefined);
+                });
+
+                it('should return undefined', () => {
+                    const index = server[FIND_REMOVE_INDEX](bunch, 5);
+
+                    expect(index).equal(undefined);
+                });
             });
         });
     });
@@ -207,7 +297,7 @@ describe('Dictionary', () => {
 
                 const result = dictionary.keys;
 
-                expect(result).deep.equal([cats[2], cats[0], cats[1]]);
+                expect(result).deep.equal([cats[0], cats[1], cats[2]]);
             });
 
             it('values', () => {
@@ -218,7 +308,7 @@ describe('Dictionary', () => {
 
                 const result = dictionary.values;
 
-                expect(result).deep.equal([persons[3], persons[2], persons[2]]);
+                expect(result).deep.equal([persons[2], persons[2], persons[3]]);
             });
 
             it('entries', () => {
@@ -230,9 +320,9 @@ describe('Dictionary', () => {
                 const result = dictionary.entries;
 
                 expect(result).deep.equal([
-                    [cats[2], persons[3]],
                     [cats[0], persons[2]],
                     [cats[1], persons[2]],
+                    [cats[2], persons[3]],
                 ]);
             });
 
@@ -246,64 +336,6 @@ describe('Dictionary', () => {
 
                 expect(result).equal(3);
             });
-        });
-    });
-
-    describe('rehash', () => {
-        it('Insert with rehash', () => {
-            const dictionary = new Dictionary<string, number>();
-
-            // @ts-ignore;
-            const origin = dictionary.rehash;
-
-            // @ts-ignore
-            const spy = sinon.stub(dictionary, 'rehash').callsFake(function (...args) {
-                // @ts-ignore
-                origin.apply(this, args);
-            });
-
-            for (let i = 0; i < 1000; i++) {
-                dictionary.set(i.toString(), i);
-            }
-
-            expect(spy.callCount).equal(1);
-        });
-
-        it('Remove with rehash', () => {
-            const dictionary = new Dictionary<string, number>();
-
-            for (let i = 0; i < 1000; i++) {
-                dictionary.set(i.toString(), i);
-            }
-
-            // @ts-ignore;
-            const origin = dictionary.rehash;
-
-            // @ts-ignore
-            const spy = sinon.stub(dictionary, 'rehash').callsFake(function (...args) {
-                // @ts-ignore
-                origin.apply(this, args);
-            });
-
-            for (let i = 0; i < 991; i++) {
-                dictionary.remove(i.toString());
-            }
-
-            expect(spy.callCount).equal(1);
-        });
-
-        it('rehash should save all values', () => {
-            const dictionary = new Dictionary<string, number>();
-
-            for (let i = 0; i < 10000; i++) {
-                dictionary.set(i.toString(), i);
-            }
-
-            for (let i = 0; i < 10000; i++) {
-                const result = dictionary.containsKey(i.toString());
-
-                expect(result).equal(true);
-            }
         });
     });
 });

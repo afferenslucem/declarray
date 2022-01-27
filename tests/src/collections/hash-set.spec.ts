@@ -46,7 +46,7 @@ describe('HashSet', () => {
 
                 const result = set.entries;
 
-                expect(result).deep.equal(['entity2', 'entity1']);
+                expect(result).deep.equal(['entity1', 'entity2']);
             });
 
             it('length', () => {
@@ -109,12 +109,12 @@ describe('HashSet', () => {
                 const result = set.entries;
 
                 expect(result).deep.equal([
+                    cats[0],
                     {
                         name: 'Lilly',
                         breed: 'American Curl Cat Breed',
                         age: 11,
                     },
-                    cats[0],
                 ]);
             });
 

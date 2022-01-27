@@ -55,9 +55,9 @@ export function getSuite(name: string = null, onStart?: () => void, onComplite?:
     }
 
     function createComparing(basis: Benchmark, target: Benchmark): string {
-        return `${(target as any).name} x ${(target.hz / basis.hz).toFixed(2)} x dev ±${target.stats.rme.toFixed(2)}% (${
-            target.stats.sample.length
-        } runs sampled)`;
+        return `${(target as any).name} x ${(target.hz / basis.hz).toFixed(2)} x dev ±${target.stats.rme.toFixed(2)}% x ${Math.floor(
+            target.hz,
+        )} op/sec (${target.stats.sample.length} runs sampled)`;
     }
 
     return suite;

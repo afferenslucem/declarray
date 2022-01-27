@@ -20,7 +20,7 @@ describe('DistinctSequence', () => {
             const result = new DistinctSequence(temp, new AuthorComparator());
 
             expect(result).not.equal(undefined);
-            expect(result.toArray()).deep.equal([['Михаил Булгаков'], ['Дмитрий Глуховский'], ['Федор Достоевский']]);
+            expect(result.toArray()).deep.equal([['Михаил Булгаков'], ['Федор Достоевский'], ['Дмитрий Глуховский']]);
         });
     });
 });

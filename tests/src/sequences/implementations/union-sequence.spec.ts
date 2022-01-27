@@ -55,10 +55,6 @@ describe('UnionSequence', () => {
             expect(result).not.equal(undefined);
             expect(result.toArray()).deep.equal([
                 {
-                    name: 'Lilly',
-                    age: 11,
-                },
-                {
                     name: 'Bella',
                     age: 2,
                 },
@@ -67,11 +63,15 @@ describe('UnionSequence', () => {
                     age: 5,
                 },
                 {
-                    name: 'Kitty',
-                    age: 10,
+                    name: 'Lilly',
+                    age: 11,
                 },
                 {
                     name: 'Charlie',
+                    age: 10,
+                },
+                {
+                    name: 'Kitty',
                     age: 10,
                 },
             ]);

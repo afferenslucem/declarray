@@ -14,7 +14,7 @@ export class PromisifySequence<T> implements IPromiseMaterializeSequence<T> {
     }
 
     public toArray(): Promise<T[]> {
-        return Promise.resolve().then(() => this.toArrayMicrotask());
+        return Promise.resolve().then(() => this.toArrayMacrotask());
     }
 
     public toLookup<TKey, TValue>(
@@ -22,11 +22,11 @@ export class PromisifySequence<T> implements IPromiseMaterializeSequence<T> {
         arg2?: IEqualityComparator<TKey> | SelectExpression<T, TValue>,
         arg3?: SelectExpression<T, TValue>,
     ): Promise<ILookup<TKey, TValue>> {
-        return Promise.resolve().then(() => this.toLookupMicrotask(arg1, arg2, arg3));
+        return Promise.resolve().then(() => this.toLookupMacrotask(arg1, arg2, arg3));
     }
 
     public toHashSet(comparator?: IEqualityComparator<T>): Promise<HashSet<T>> {
-        return Promise.resolve().then(() => this.toHashSetMicrotask(comparator));
+        return Promise.resolve().then(() => this.toHashSetMacrotask(comparator));
     }
 
     public toDictionary<TKey, TValue>(
@@ -34,60 +34,68 @@ export class PromisifySequence<T> implements IPromiseMaterializeSequence<T> {
         arg2?: IEqualityComparator<TKey> | SelectExpression<T, TValue>,
         arg3?: SelectExpression<T, TValue>,
     ): Promise<Dictionary<TKey, TValue>> {
-        return Promise.resolve().then(() => this.toDictionaryMicrotask(arg1, arg2, arg3));
+        return Promise.resolve().then(() => this.toDictionaryMacrotask(arg1, arg2, arg3));
     }
 
-    private toArrayMicrotask(): Promise<T[]> {
+    private toArrayMacrotask(): Promise<T[]> {
         return new Promise<T[]>((resolve, reject) => {
-            try {
-                const result = this.inner.toArray();
-                resolve(result);
-            } catch (e) {
-                reject(e);
-            }
+            setTimeout(() => {
+                try {
+                    const result = this.inner.toArray();
+                    resolve(result);
+                } catch (e) {
+                    reject(e);
+                }
+            });
         });
     }
 
-    private toLookupMicrotask<TKey, TValue>(
+    private toLookupMacrotask<TKey, TValue>(
         arg1: SelectExpression<T, TKey>,
         arg2?: IEqualityComparator<TKey> | SelectExpression<T, TValue>,
         arg3?: SelectExpression<T, TValue>,
     ): Promise<ILookup<TKey, TValue>> {
         return new Promise<ILookup<TKey, TValue>>((resolve, reject) => {
-            try {
-                // @ts-ignore
-                const result = this.inner.toLookup(arg1, arg2, arg3);
-                resolve(result);
-            } catch (e) {
-                reject(e);
-            }
+            setTimeout(() => {
+                try {
+                    // @ts-ignore
+                    const result = this.inner.toLookup(arg1, arg2, arg3);
+                    resolve(result);
+                } catch (e) {
+                    reject(e);
+                }
+            });
         });
     }
 
-    private toHashSetMicrotask(comparator?: IEqualityComparator<T>): Promise<HashSet<T>> {
+    private toHashSetMacrotask(comparator?: IEqualityComparator<T>): Promise<HashSet<T>> {
         return new Promise<HashSet<T>>((resolve, reject) => {
-            try {
-                const result = this.inner.toHashSet(comparator);
-                resolve(result);
-            } catch (e) {
-                reject(e);
-            }
+            setTimeout(() => {
+                try {
+                    const result = this.inner.toHashSet(comparator);
+                    resolve(result);
+                } catch (e) {
+                    reject(e);
+                }
+            });
         });
     }
 
-    private toDictionaryMicrotask<TKey, TValue>(
+    private toDictionaryMacrotask<TKey, TValue>(
         arg1: SelectExpression<T, TKey>,
         arg2?: IEqualityComparator<TKey> | SelectExpression<T, TValue>,
         arg3?: SelectExpression<T, TValue>,
     ): Promise<Dictionary<TKey, TValue>> {
         return new Promise<Dictionary<TKey, TValue>>((resolve, reject) => {
-            try {
-                // @ts-ignore
-                const result = this.inner.toDictionary(arg1, arg2, arg3);
-                resolve(result);
-            } catch (e) {
-                reject(e);
-            }
+            setTimeout(() => {
+                try {
+                    // @ts-ignore
+                    const result = this.inner.toDictionary(arg1, arg2, arg3);
+                    resolve(result);
+                } catch (e) {
+                    reject(e);
+                }
+            });
         });
     }
 }

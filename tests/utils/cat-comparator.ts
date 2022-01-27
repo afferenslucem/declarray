@@ -8,7 +8,7 @@ export class CatComparator implements IEqualityComparator<ICat> {
     }
 
     getHashCode(entity: ICat): number {
-        return new DefaultComparator().getHashCode(entity.name);
+        return new DefaultComparator().getHashCode(entity.name + entity.age + entity.breed);
     }
 
     equals(first: ICat, second: ICat): boolean {

@@ -67,8 +67,8 @@ describe('Sequence', () => {
 
                     expect(distinctByAge).deep.equal([
                         { name: 'Tom', age: 1 },
-                        { name: 'Feya', age: 2 },
                         { name: 'Bonny', age: 3 },
+                        { name: 'Feya', age: 2 },
                     ]);
                 });
             });
@@ -92,15 +92,15 @@ describe('Sequence', () => {
                             group: _([{ name: 'Tom', age: 1 }]),
                         },
                         {
+                            key: 3,
+                            group: _([{ name: 'Bonny', age: 3 }]),
+                        },
+                        {
                             key: 2,
                             group: _([
                                 { name: 'Feya', age: 2 },
                                 { name: 'Cherry', age: 2 },
                             ]),
-                        },
-                        {
-                            key: 3,
-                            group: _([{ name: 'Bonny', age: 3 }]),
                         },
                     ]);
                 });
@@ -122,8 +122,8 @@ describe('Sequence', () => {
 
                     expect(catsCountByAge).deep.equal([
                         { key: 1, group: 1 },
-                        { key: 2, group: 2 },
                         { key: 3, group: 1 },
+                        { key: 2, group: 2 },
                     ]);
                 });
 
@@ -187,16 +187,6 @@ describe('Sequence', () => {
                             ],
                         },
                         {
-                            key: { street: 'Bleecker Street', apartment: 10 },
-                            group: [
-                                {
-                                    name: 'Feya',
-                                    age: 2,
-                                    home: { street: 'Bleecker Street', apartment: 10 },
-                                },
-                            ],
-                        },
-                        {
                             key: { street: 'Dekalb Avenue', apartment: 12 },
                             group: [
                                 {
@@ -208,6 +198,16 @@ describe('Sequence', () => {
                                     name: 'Cherry',
                                     age: 2,
                                     home: { street: 'Dekalb Avenue', apartment: 12 },
+                                },
+                            ],
+                        },
+                        {
+                            key: { street: 'Bleecker Street', apartment: 10 },
+                            group: [
+                                {
+                                    name: 'Feya',
+                                    age: 2,
+                                    home: { street: 'Bleecker Street', apartment: 10 },
                                 },
                             ],
                         },
@@ -231,12 +231,12 @@ describe('Sequence', () => {
                             group: ['Мастер и Маргарита'],
                         },
                         {
-                            key: ['Дмитрий Глуховский'],
-                            group: ['Метро 2034', 'Метро 2033'],
-                        },
-                        {
                             key: ['Федор Достоевский'],
                             group: ['Преступление и наказание'],
+                        },
+                        {
+                            key: ['Дмитрий Глуховский'],
+                            group: ['Метро 2034', 'Метро 2033'],
                         },
                     ]);
                 });
@@ -1399,10 +1399,6 @@ describe('Sequence', () => {
                         expect(result).not.equal(undefined);
                         expect(result).deep.equal([
                             {
-                                name: 'Lilly',
-                                age: 11,
-                            },
-                            {
                                 name: 'Bella',
                                 age: 2,
                             },
@@ -1411,11 +1407,15 @@ describe('Sequence', () => {
                                 age: 5,
                             },
                             {
-                                name: 'Kitty',
-                                age: 10,
+                                name: 'Lilly',
+                                age: 11,
                             },
                             {
                                 name: 'Charlie',
+                                age: 10,
+                            },
+                            {
+                                name: 'Kitty',
                                 age: 10,
                             },
                         ]);
@@ -1469,9 +1469,9 @@ describe('Sequence', () => {
                 const result = _(cats).toDictionary(item => item.age).entries;
 
                 expect(result).deep.equal([
-                    [1, { name: 'Lulya', age: 1 }],
-                    [4, { name: 'Cherry', age: 4 }],
                     [9, { name: 'Barsik', age: 9 }],
+                    [4, { name: 'Cherry', age: 4 }],
+                    [1, { name: 'Lulya', age: 1 }],
                 ]);
             });
 
@@ -1493,8 +1493,8 @@ describe('Sequence', () => {
                 const result = _(cats).toHashSet(catComparer).entries;
 
                 expect(result).deep.equal([
-                    { name: 'Cherry', age: 4 },
                     { name: 'Barsik', age: 9 },
+                    { name: 'Cherry', age: 4 },
                     { name: 'Lulya', age: 1 },
                 ]);
             });
@@ -1510,7 +1510,7 @@ describe('Sequence', () => {
                 const result = _(cats).toLookup(item => item.age).entries;
 
                 expect(result).deep.equal([
-                    [1, [{ name: 'Lulya', age: 1 }]],
+                    [9, [{ name: 'Barsik', age: 9 }]],
                     [
                         4,
                         [
@@ -1518,16 +1518,36 @@ describe('Sequence', () => {
                             { name: 'Feya', age: 4 },
                         ],
                     ],
-                    [9, [{ name: 'Barsik', age: 9 }]],
+                    [1, [{ name: 'Lulya', age: 1 }]],
                 ]);
             });
 
-            it('promisify', async () => {
-                const first = _([1, 2, 3, 4, 5]);
+            describe('promisify', () => {
+                it('toArray', async () => {
+                    const first = _([1, 2, 3, 4, 5]);
 
-                const result = await first.promisify().toArray();
+                    const result = await first.promisify().toArray();
 
-                expect(result).deep.equal([1, 2, 3, 4, 5]);
+                    expect(result).deep.equal([1, 2, 3, 4, 5]);
+                });
+
+                it('toHashSet', async () => {
+                    const first = _([1, 2, 3, 4, 5, 4, 3, 2, 1]);
+
+                    const result = await first.promisify().toHashSet();
+                });
+
+                it('toDictionary', async () => {
+                    const first = _([1, 2, 3, 4, 5, 4, 3, 2, 1]);
+
+                    const result = await first.promisify().toDictionary(key => key);
+                });
+
+                it('toLookup', async () => {
+                    const first = _([1, 2, 3, 4, 5, 4, 3, 2, 1]);
+
+                    const result = await first.promisify().toLookup(key => key);
+                });
             });
         });
     });
