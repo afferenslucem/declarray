@@ -1535,8 +1535,18 @@ describe('Sequence', () => {
                     const first = _([1, 2, 3, 4, 5, 4, 3, 2, 1]);
 
                     const result = await first.promisify().toHashSet();
+                });
 
-                    expect(result).deep.equal([1, 2, 3, 4, 5]);
+                it('toDictionary', async () => {
+                    const first = _([1, 2, 3, 4, 5, 4, 3, 2, 1]);
+
+                    const result = await first.promisify().toDictionary(key => key);
+                });
+
+                it('toLookup', async () => {
+                    const first = _([1, 2, 3, 4, 5, 4, 3, 2, 1]);
+
+                    const result = await first.promisify().toLookup(key => key);
                 });
             });
         });
