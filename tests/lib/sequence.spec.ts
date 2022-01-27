@@ -1522,12 +1522,22 @@ describe('Sequence', () => {
                 ]);
             });
 
-            it('promisify', async () => {
-                const first = _([1, 2, 3, 4, 5]);
+            describe('promisify', () => {
+                it('toArray', async () => {
+                    const first = _([1, 2, 3, 4, 5]);
 
-                const result = await first.promisify().toArray();
+                    const result = await first.promisify().toArray();
 
-                expect(result).deep.equal([1, 2, 3, 4, 5]);
+                    expect(result).deep.equal([1, 2, 3, 4, 5]);
+                });
+
+                it('toHashSet', async () => {
+                    const first = _([1, 2, 3, 4, 5, 4, 3, 2, 1]);
+
+                    const result = await first.promisify().toHashSet();
+
+                    expect(result).deep.equal([1, 2, 3, 4, 5]);
+                });
             });
         });
     });

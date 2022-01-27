@@ -108,13 +108,12 @@ export class Dictionary<TKey, TValue> {
             return undefined;
         }
 
-        let i = 0;
+        for (let i = 0, len = bunch.length; i < len; i++) {
+            const comparison = this.comparator.compare(bunch[i].key, key);
 
-        while (i < bunch.length && this.comparator.compare(bunch[i].key, key) <= 0) {
-            if (this.comparator.equals(bunch[i].key, key)) {
-                return bunch[i].value;
-            }
-            i++;
+            if (comparison > 0) break;
+
+            if (this.comparator.equals(bunch[i].key, key)) return bunch[i].value;
         }
 
         return undefined;
@@ -137,7 +136,22 @@ export class Dictionary<TKey, TValue> {
     }
 
     public containsKey(key: TKey): boolean {
-        return this.get(key) != null;
+        const hash = this.comparator.getHashCode(key);
+        const bunch = this.hashStorage.get(hash);
+
+        if (!bunch) {
+            return false;
+        }
+
+        for (let i = 0, len = bunch.length; i < len; i++) {
+            const comparison = this.comparator.compare(bunch[i].key, key);
+
+            if (comparison > 0) break;
+
+            if (this.comparator.equals(bunch[i].key, key)) return true;
+        }
+
+        return false;
     }
 
     public clear(): void {
